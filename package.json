@@ -1,0 +1,27 @@
+{
+  "name": "redux-persist-migration",
+  "version": "3.0.0",
+  "description": "migrate your redux state",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rt2zz/redux-persist-migration.git"
+  },
+  "homepage": "https://github.com/rt2zz/redux-persist-migration",
+  "author": "rt2zz <zack@root-two.com>",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "keywords": [
+    "redux",
+    "redux-persist",
+    "redux-persist-transform",
+    "compression"
+  ],
+  "peerDependencies": {
+    "redux-persist": ">=3.0.0"
+  }
+}
