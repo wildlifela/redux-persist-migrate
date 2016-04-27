@@ -1,14 +1,16 @@
 var reduxPersist = require('redux-persist')
 var createTransform = reduxPersist.createTransform
 
-var versionKey = 'reduxPersist:_stateVersion'
+var versionKey = 'reduxPersistMigration:_stateVersion'
 
 function createMigration(manifest) {
 
   var stateVersion = null
+  var storage = null
   var versionKeys = Object.keys(manifest).sort()
   var preloaded = false
   var processedKeys = []
+  var savedLatestVersion = false
 
   function noop (state) {
     return state
@@ -23,13 +25,22 @@ function createMigration(manifest) {
     })
 
     processedKeys.push(key)
+    if (!savedLatestVersion && versionKeys.length > 0) saveLatestVersion(versionKeys)
     return state
+  }
+
+  function saveLatestVersion (versionKeys) {
+    savedLatestVersion = true
+    storage.setItem(versionKey, versionKeys[versionKeys.length - 1], function (err) {
+      if (err && process.env.NODE_ENV !== 'production') console.error(err)
+    })
   }
 
   var transform = createTransform(noop, migrate)
   var preloader = function (config) {
     return new Promise(function (resolve, reject) {
-      config.storage.getItem(versionKey, function (err, version) {
+      storage = config.storage
+      storage.getItem(versionKey, function (err, version) {
         preloaded = true
         versionKeys = _.filter(versionKeys, function (v) { return v > version })
         stateVersion = version
