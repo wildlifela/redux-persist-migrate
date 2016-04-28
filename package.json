@@ -1,5 +1,5 @@
 {
-  "name": "redux-persist-migration",
+  "name": "redux-persist-migrate",
   "version": "3.0.0",
   "description": "migrate your redux state",
   "main": "index.js",
@@ -8,9 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rt2zz/redux-persist-migration.git"
+    "url": "https://github.com/rt2zz/redux-persist-migrate.git"
   },
-  "homepage": "https://github.com/rt2zz/redux-persist-migration",
+  "homepage": "https://github.com/rt2zz/redux-persist-migrate",
   "author": "rt2zz <zack@root-two.com>",
   "license": "MIT",
   "dependencies": {
