@@ -1,6 +1,6 @@
 {
   "name": "redux-persist-migrate",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "migrate your redux state",
   "main": "lib/index.js",
   "scripts": {
