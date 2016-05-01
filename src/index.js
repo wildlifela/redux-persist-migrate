@@ -1,6 +1,14 @@
 import { REHYDRATE } from 'redux-persist/constants'
 
-export default function createMigration (versionSelector, versionSetter, manifest) {
+export default function createMigration (manifest, versionSelector, versionSetter) {
+  if (typeof versionSelector === 'string') {
+    let versionString = versionSelector
+    versionSelector = (state) => state[versionString].version
+    versionSetter = (state, version) => {
+      state[versionString].version = version
+      return state
+    }
+  }
 
   const versionKeys = Object.keys(manifest).sort()
   const currentVersion = versionKeys[versionKeys.length - 1]
@@ -13,8 +21,10 @@ export default function createMigration (versionSelector, versionSetter, manifes
     return (state, action) => {
       if (action.type !== REHYDRATE) return reducer(state, action)
       else {
-        let incomingState = action.payload
         let incomingVersion = versionSelector(incomingState)
+        if (incomingVersion === currentVersion) return reducer(state, action)
+
+        let incomingState = action.payload
         let migratedState = migrate(incomingState, incomingVersion)
         action.payload = migratedState
         return reducer(migratedState, action)
@@ -23,11 +33,10 @@ export default function createMigration (versionSelector, versionSetter, manifes
   }
 
   function migrate (state, version) {
-    if (version === currentVersion) return state
     versionKeys
       .filter((v) => !currentVersion || v > currentVersion)
-      .forEach((v) => state = manifest[v](state))
-    state = versionSetter(state)
+      .forEach((v) => { state = manifest[v](state) })
+    state = versionSetter(state, currentVersion)
     return state
   }
 }
