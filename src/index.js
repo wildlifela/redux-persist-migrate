@@ -5,7 +5,12 @@ export default function createMigration (manifest, versionSelector, versionSette
     let versionString = versionSelector
     versionSelector = (state) => state && state[versionString] && state[versionString].version
     versionSetter = (state, version) => {
-      if (state && state[versionString]) state[versionString].version = version
+      if (['undefined', 'object'].indexOf(typeof state[versionString]) === -1) {
+        console.error('redux-persist-migrate: state for versionSetter key must be an object or undefined')
+        return state
+      }
+      state[versionString] = state[versionString] || {}
+      state[versionString].version = version
       return state
     }
   }
