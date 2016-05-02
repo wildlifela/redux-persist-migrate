@@ -3,9 +3,9 @@ import { REHYDRATE } from 'redux-persist/constants'
 export default function createMigration (manifest, versionSelector, versionSetter) {
   if (typeof versionSelector === 'string') {
     let versionString = versionSelector
-    versionSelector = (state) => state[versionString].version
+    versionSelector = (state) => state && state[versionString] && state[versionString].version
     versionSetter = (state, version) => {
-      state[versionString].version = version
+      if (state && state[versionString]) state[versionString].version = version
       return state
     }
   }
