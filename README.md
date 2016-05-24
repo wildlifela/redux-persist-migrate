@@ -4,6 +4,7 @@ Migrate redux state between versions with redux-persist.
 
 #### Usage
 ```js
+import { persistStore, autoRehydrate } from 'redux-persist'
 import createMigration from 'redux-persist-migrate'
 
 const manifest = {
