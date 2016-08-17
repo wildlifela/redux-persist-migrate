@@ -14,7 +14,7 @@ const manifest = {
 }
 
 // reducerKey is the key of the reducer you want to store the state version in
-// in this example after migrations run `state.app.version` will equal `0.2`
+// in this example after migrations run `state.app.version` will equal `2`
 let reducerKey = 'app'
 const migration = createMigration(manifest, reducerKey)
 const enhancer =  compose([migration, autoRehydrate()])
