@@ -17,7 +17,7 @@ const manifest = {
 // in this example after migrations run `state.app.version` will equal `2`
 let reducerKey = 'app'
 const migration = createMigration(manifest, reducerKey)
-const enhancer =  compose([migration, autoRehydrate()])
+const enhancer =  compose(migration, autoRehydrate())
 
 const store = createStore(reducer, null, enhancer)
 persistStore(store)
