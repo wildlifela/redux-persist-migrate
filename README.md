@@ -23,7 +23,7 @@ const store = createStore(reducer, null, enhancer)
 persistStore(store)
 ```
 
-In the above example `migration = createMigration(manifest, 'app')` is equivalent to the more generalized syntax:
+In the above example `migration = createMigration(manifest, {selector: 'app'})` is equivalent to the more generalized syntax:
 ```js
 // alternatively with version selector & setter
 const migration = createMigration(manifest, {
