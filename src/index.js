@@ -7,7 +7,7 @@ const processKey = (key) => {
   return int
 }
 
-export default function createMigration (manifest, versionSelector, versionSetter, isSemver) {
+export default function createMigration (manifest, versionSelector, versionSetter, isSemver = false) {
   if (typeof versionSelector === 'string') {
     let reducerKey = versionSelector
     versionSelector = (state) => state && state[reducerKey] && state[reducerKey].version

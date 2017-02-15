@@ -23,6 +23,11 @@ const store = createStore(reducer, null, enhancer)
 persistStore(store)
 ```
 
+`createMigration` takes the following form:
+```
+createMigration (manifest, versionSelector, versionSetter, isSemver = false)
+```
+
 In the above example `migration = createMigration(manifest, 'app')` is equivalent to the more generalized syntax:
 ```js
 // alternatively with version selector & setter
@@ -30,5 +35,21 @@ const migration = createMigration(
   manifest,
   (state) => state.app.version,
   (state, version) => state.app.version = version
+)
+```
+
+You can also use semver to declare your migrations:
+```js
+
+const manifest = {
+ 1: (state) => ({...state, staleReducer: undefined})
+ 2: (state) => ({...state, app: {...state.app, staleKey: undefined}})
+}
+
+const migration = createMigration(
+  manifest,
+  (state) => state.app.version,
+  (state, version) => state.app.version = version,
+  true
 )
 ```
