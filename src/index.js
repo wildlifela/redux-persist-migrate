@@ -1,4 +1,4 @@
-import semver from 'semver'
+import SemVer from 'semver'
 import { REHYDRATE } from 'redux-persist/constants'
 
 const processKey = (key) => {
@@ -7,13 +7,13 @@ const processKey = (key) => {
   return int
 }
 
-export default function createMigration (manifest, versionSelector, versionSetter, isSemver = false) {
-  if (typeof versionSelector === 'string') {
-    let reducerKey = versionSelector
-    versionSelector = (state) => state && state[reducerKey] && state[reducerKey].version
-    versionSetter = (state, version) => {
+export default function createMigration (manifest, {selector, setter, semver = false}) {
+  if (typeof selector === 'string') {
+    let reducerKey = selector
+    selector = (state) => state && state[reducerKey] && state[reducerKey].version
+    setter = (state, version) => {
       if (['undefined', 'object'].indexOf(typeof state[reducerKey]) === -1) {
-        console.error('redux-persist-migrate: state for versionSetter key must be an object or undefined')
+        console.error('redux-persist-migrate: state for setter key must be an object or undefined')
         return state
       }
       state[reducerKey] = state[reducerKey] || {}
@@ -22,13 +22,13 @@ export default function createMigration (manifest, versionSelector, versionSette
     }
   }
 
-  const versionKeys = !isSemver ? Object.keys(manifest).map(processKey).sort() : semver.sort(Object.keys(manifest))
+  const versionKeys = !semver ? Object.keys(manifest).map(processKey).sort() : SemVer.sort(Object.keys(manifest))
   const currentVersion = versionKeys[versionKeys.length - 1]
 
   const migrationDispatch = (next) => (action) => {
     if (action.type === REHYDRATE) {
       let incomingState = action.payload
-      let incomingVersion = versionSelector(incomingState)
+      let incomingVersion = selector(incomingState)
       if (incomingVersion !== currentVersion) {
         let migratedState = migrate(incomingState, incomingVersion)
         action.payload = migratedState
@@ -39,9 +39,9 @@ export default function createMigration (manifest, versionSelector, versionSette
 
   const migrate = (state, version) => {
     versionKeys
-      .filter((v) => !version || (isSemver ? semver.gt(v, version) : v > version))
+      .filter((v) => !version || (semver ? SemVer.gt(v, version) : v > version))
       .forEach((v) => { state = manifest[v](state) })
-    state = versionSetter(state, currentVersion)
+    state = setter(state, currentVersion)
     return state
   }
 

@@ -26,7 +26,7 @@ describe('createMigration', () => {
       return state
     }
 
-    const migration = createMigration(manifest, 'app', undefined)
+    const migration = createMigration(manifest, { selector: 'app' })
     const store = createStore(test, migration)
 
     store.dispatch({
@@ -59,7 +59,7 @@ describe('createMigration', () => {
       return state
     }
 
-    const migration = createMigration(manifest, 'app', undefined, true)
+    const migration = createMigration(manifest, { selector: 'app', semver: true })
     const store = createStore(test, migration)
 
     store.dispatch({
