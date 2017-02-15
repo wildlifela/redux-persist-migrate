@@ -1,3 +1,4 @@
+import semver from 'semver'
 import { REHYDRATE } from 'redux-persist/constants'
 
 const processKey = (key) => {
@@ -6,7 +7,7 @@ const processKey = (key) => {
   return int
 }
 
-export default function createMigration (manifest, versionSelector, versionSetter) {
+export default function createMigration (manifest, versionSelector, versionSetter, isSemver) {
   if (typeof versionSelector === 'string') {
     let reducerKey = versionSelector
     versionSelector = (state) => state && state[reducerKey] && state[reducerKey].version
@@ -21,7 +22,7 @@ export default function createMigration (manifest, versionSelector, versionSette
     }
   }
 
-  const versionKeys = Object.keys(manifest).map(processKey).sort()
+  const versionKeys = !isSemver ? Object.keys(manifest).map(processKey).sort() : semver.sort(Object.keys(manifest))
   const currentVersion = versionKeys[versionKeys.length - 1]
 
   const migrationDispatch = (next) => (action) => {
@@ -38,14 +39,14 @@ export default function createMigration (manifest, versionSelector, versionSette
 
   const migrate = (state, version) => {
     versionKeys
-      .filter((v) => !version || v > version)
+      .filter((v) => !version || (isSemver ? semver.gt(v, version) : v > version))
       .forEach((v) => { state = manifest[v](state) })
     state = versionSetter(state, currentVersion)
     return state
   }
 
   return (next) => (reducer, initialState, enhancer) => {
-    var store = next(reducer, initialState, enhancer)
+    const store = next(reducer, initialState, enhancer)
     return {
       ...store,
       dispatch: migrationDispatch(store.dispatch)
