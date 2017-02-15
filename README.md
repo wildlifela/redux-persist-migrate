@@ -36,8 +36,8 @@ You can also use semver to declare your migrations:
 ```js
 
 const manifest = {
- 1: (state) => ({...state, staleReducer: undefined})
- 2: (state) => ({...state, app: {...state.app, staleKey: undefined}})
+ '0.0.1': (state) => ({...state, staleReducer: undefined})
+ '0.0.3-rc.1': (state) => ({...state, app: {...state.app, staleKey: undefined}})
 }
 
 const migration = createMigration(manifest, {
