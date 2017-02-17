@@ -26,10 +26,10 @@ export default function createMigration (manifest, versionSelector, versionSette
 
   const migrationDispatch = (next) => (action) => {
     if (action.type === REHYDRATE) {
-      let incomingState = action.payload
-      let incomingVersion = versionSelector(incomingState)
+      const incomingState = action.payload
+      const incomingVersion = versionSelector(incomingState)
       if (incomingVersion !== currentVersion) {
-        let migratedState = migrate(incomingState, incomingVersion)
+        const migratedState = migrate(incomingState, incomingVersion)
         action.payload = migratedState
       }
     }
