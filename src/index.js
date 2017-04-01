@@ -22,14 +22,18 @@ export default function createMigration (manifest, versionSelector, versionSette
   }
 
   const versionKeys = Object.keys(manifest).map(processKey).sort((a, b) => a - b)
-  const currentVersion = versionKeys[versionKeys.length - 1]
+  let currentVersion = versionKeys[versionKeys.length - 1]
+  if (!currentVersion) currentVersion = -1
+
 
   const migrationDispatch = (next) => (action) => {
     if (action.type === REHYDRATE) {
-      let incomingState = action.payload
-      let incomingVersion = versionSelector(incomingState)
+      const incomingState = action.payload
+      let incomingVersion = parseInt(versionSelector(incomingState))
+      if (isNaN(incomingVersion)) incomingVersion = null
+
       if (incomingVersion !== currentVersion) {
-        let migratedState = migrate(incomingState, incomingVersion)
+        const migratedState = migrate(incomingState, incomingVersion)
         action.payload = migratedState
       }
     }
@@ -37,9 +41,11 @@ export default function createMigration (manifest, versionSelector, versionSette
   }
 
   const migrate = (state, version) => {
-    versionKeys
-      .filter((v) => !version || v > version)
-      .forEach((v) => { state = manifest[v](state) })
+    if (version != null) {
+      versionKeys
+        .filter((v) => v > version)
+        .forEach((v) => { state = manifest[v](state) })
+    }
     state = versionSetter(state, currentVersion)
     return state
   }
