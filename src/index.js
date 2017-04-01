@@ -21,7 +21,7 @@ export default function createMigration (manifest, versionSelector, versionSette
     }
   }
 
-  const versionKeys = Object.keys(manifest).map(processKey).sort()
+  const versionKeys = Object.keys(manifest).map(processKey).sort((a, b) => a - b)
   const currentVersion = versionKeys[versionKeys.length - 1]
 
   const migrationDispatch = (next) => (action) => {
