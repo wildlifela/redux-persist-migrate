@@ -25,7 +25,6 @@ export default function createMigration (manifest, versionSelector, versionSette
   let currentVersion = versionKeys[versionKeys.length - 1]
   if (!currentVersion) currentVersion = -1
 
-
   const migrationDispatch = (next) => (action) => {
     if (action.type === REHYDRATE) {
       const incomingState = action.payload
