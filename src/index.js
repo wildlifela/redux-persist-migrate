@@ -23,7 +23,7 @@ export default function createMigration (manifest, versionSelector, versionSette
 
   const versionKeys = Object.keys(manifest).map(processKey).sort((a, b) => a - b)
   let currentVersion = versionKeys[versionKeys.length - 1]
-  if (!currentVersion) currentVersion = -1
+  if (!currentVersion && currentVersion !== 0) currentVersion = -1
 
   const migrationDispatch = (next) => (action) => {
     if (action.type === REHYDRATE) {
