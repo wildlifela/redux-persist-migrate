@@ -40,11 +40,10 @@ export default function createMigration (manifest, versionSelector, versionSette
   }
 
   const migrate = (state, version) => {
-    if (version != null) {
-      versionKeys
-        .filter((v) => v > version)
-        .forEach((v) => { state = manifest[v](state) })
-    }
+    versionKeys
+      .filter((v) => v > version || version === null)
+      .forEach((v) => { state = manifest[v](state) })
+
     state = versionSetter(state, currentVersion)
     return state
   }
