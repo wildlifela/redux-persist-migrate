@@ -17,16 +17,16 @@
   "homepage": "https://github.com/wildlifela/redux-persist-migrate",
   "author": "rt2zz <zack@root-two.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "redux-persist": ">=3.0.0"
+  },
   "keywords": [
     "redux",
     "redux-persist",
     "redux-persist-migrate",
     "redux-migrate"
   ],
-  "peerDependencies": {
-    "redux-persist": ">=3.0.0"
-  },
   "devDependencies": {
     "babel-cli": "^6.7.7",
     "babel-eslint": "^6.0.4",
