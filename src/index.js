@@ -29,25 +29,21 @@ const getVersionSelector = (reducerKey) => {
 
 const getVersionSetter = (reducerKey) => {
   return (state, version) => {
-    if (Immutable.Map.isMap(state)) {
-      const reduced = state.get(reducerKey)
-      if (!isKeyValid(reduced)) {
-        return state
-      }
-      if (!state.has(reducerKey)) {
-        state.set(reducerKey, Immutable.Map())
-      }
-      return state.setIn([reducerKey, 'version'], version)
-    }
-    if (!isKeyValid(state[reducerKey])) {
+    let reduced = Immutable.Map.isMap(state) ? state.get(reducerKey) : state[reducerKey]
+    if (!isKeyValid(reduced)) {
       return state
+    }
+    if (Immutable.Map.isMap(reduced)) {
+      reduced = reduced.set('version', version)
+    } else {
+      reduced = {...reduced, version: version}
+    }
+    if (Immutable.Map.isMap(state)) {
+      return state.set(reducerKey, reduced)
     }
     return {
       ...state,
-      [reducerKey]: {
-        ...state[reducerKey],
-        version: version
-      }
+      [reducerKey]: reduced
     }
   }
 }
