@@ -29,6 +29,8 @@ In the above example `migration = createMigration(manifest, 'app')` is equivalen
 const migration = createMigration(
   manifest,
   (state) => state.app.version,
-  (state, version) => state.app.version = version
+  (state, version) => {
+    return { ...state, app: { ...state.app, version: version } }
+  }
 )
 ```
