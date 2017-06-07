@@ -17,13 +17,18 @@ const isKeyValid = (key) => {
 
 const getVersionSelector = (reducerKey) => {
   return (state) => {
+    let reduced = null
     if (Immutable.Map.isMap(state)) {
-      return state.getIn([reducerKey, 'version'], null)
+      reduced = state.get(reducerKey, null)
+    } else {
+      reduced = state[reducerKey]
     }
-    if (reducerKey in state && 'version' in state[reducerKey]) {
-      return state[reducerKey].version
+    if (!reduced) {
+      return null
+    } else if (Immutable.Map.isMap(reduced)) {
+      return reduced.get('version')
     }
-    return null
+    return reduced.version
   }
 }
 
