@@ -1,5 +1,5 @@
 ## DEPRECATED - This library has been moved
-This library has been moved into [redux-persist v5](https://github.com/rt2zz/redux-persist/tree/v5)
+This library has been moved into [redux-persist](https://github.com/rt2zz/redux-persist#migrations)
 
 ---
 
