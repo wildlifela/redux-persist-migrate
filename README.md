@@ -1,5 +1,5 @@
-**NOTE**
-This library has been moved into the forthcoming [redux-persist v5](https://github.com/rt2zz/redux-persist/tree/v5). If you are a new user please start with redux-persist v5 instead. See [docs](https://github.com/rt2zz/redux-persist/blob/v5/docs/migrations.md) for more information. 
+## DEPRECATED - This library has been moved
+This library has been moved into [redux-persist v5](https://github.com/rt2zz/redux-persist/tree/v5)
 
 ---
 
