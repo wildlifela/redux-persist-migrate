@@ -25,26 +25,32 @@ export default function createMigration (manifest, versionSelector, versionSette
   let currentVersion = versionKeys[versionKeys.length - 1]
   if (!currentVersion && currentVersion !== 0) currentVersion = -1
 
-  const migrationDispatch = (next) => (action) => {
+  const migrationDispatch = (next) => async (action) => {
     if (action.type === REHYDRATE) {
       const incomingState = action.payload
       let incomingVersion = parseInt(versionSelector(incomingState))
       if (isNaN(incomingVersion)) incomingVersion = null
 
       if (incomingVersion !== currentVersion) {
-        const migratedState = migrate(incomingState, incomingVersion)
+        const migratedState = await migrate(incomingState, incomingVersion)
         action.payload = migratedState
       }
     }
     return next(action)
   }
 
-  const migrate = (state, version) => {
-    versionKeys
-      .filter((v) => v > version || version === null)
-      .forEach((v) => { state = manifest[v](state) })
+  const migrate = async (state, version) => {
+    const migrationKeys = versionKeys
+      .filter((v) => v > version || version === null);
 
-    state = versionSetter(state, currentVersion)
+    let migratedStatePromise = await migrationKeys.reduce((statePromiseChain, versionKey) => {
+      return statePromiseChain.then(state => {
+        return manifest[versionKey](state)
+      })
+    }, Promise.resolve(state))
+
+    state = versionSetter(migratedStatePromise, currentVersion)
+
     return state
   }
 
